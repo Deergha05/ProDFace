@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProDFace UI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/home.css" rel="stylesheet">
+
+    <!-- <script>
+        function validateFile(input) {
+            const filePath = input.value;
+            const allowedExtension = /\.(pdb|cif)$/i;
+            if (!allowedExtension.exec(filePath)) {
+                alert('Please upload a .pdb or .cif file.');
+                input.value = ''; // Clear the input
+                return false;
+            }
+            return true;
+        }
+
+        function validateFileFASTA(input) {
+            const filePath = input.value;
+            const allowedExtension = /\.(fasta)$/i;
+            if (!allowedExtension.exec(filePath)) {
+                alert('Please upload a .fasta file.');
+                input.value = ''; // Clear the input
+                return false;
+            }
+            return true;
+        }
+
+        function parseFile(input) {
+            if (validateFile(input)) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const content = event.target.result;
+                    const chains = extractChains(content);
+                    fillChainIDs(chains);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function extractChains(content) {
+            const chainIDs = new Set();
+            const lines = content.split('\n');
+            lines.forEach(line => {
+                if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
+                    const chainID = line.substring(21, 22).trim();
+                    if (chainID) {
+                        chainIDs.add(chainID);
+                    }
+                }
+            });
+            return Array.from(chainIDs);
+        }
+
+        function fillChainIDs(chains) {
+            const proteinChainInputs = document.querySelectorAll('#proteinChains input');
+            const dnaChainInputs = document.querySelectorAll('#dnaChains input');
+
+            // Clear previous values
+            proteinChainInputs.forEach(input => input.value = '');
+            dnaChainInputs.forEach(input => input.value = '');
+
+            chains.forEach((chain, index) => {
+                if (index < proteinChainInputs.length) {
+                    proteinChainInputs[index].value = chain;
+                } else if (index - proteinChainInputs.length < dnaChainInputs.length) {
+                    dnaChainInputs[index - proteinChainInputs.length].value = chain;
+                }
+            });
+        }
+    </script> -->
+</head>
+<body class="bg-dark text-white" style="background-image: url('assets/img/new-protein-image.jpg');">
+    <div class="container mt-5">
+        <h2 class="text-center form-label">ProDFace: Server for the Analysis of Protein-DNA Interface</h2>
+        <hr>
+        <form id="myForm">
+            <!-- <div class="mb-3">
+                <label for="option1" class="form-label">OPTION 1: Provide 4-letter PDB code of the Protein-DNA complex</label>
+                <input type="text" class="form-control" id="option1" placeholder="e.g., 1A3Q">
+            </div> -->
+            <div class="mb-3">
+                <label for="option2" class="form-label">OPTION 2: Upload a Protein-DNA complex file in PDB/CIF format</label>
+                <input type="file" class="form-control" id="option2" 
+                >
+                <!-- onchange="parseFile(this)" -->
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Chain ID(s) in Protein component:</label>
+                    <div class="d-flex" id="proteinChains">
+                        <input type="text" class="form-control me-1" placeholder="Chains (Protein)">
+                        <!-- <input type="text" class="form-control me-1" placeholder="Chain 2 (Protein)">
+                        <input type="text" class="form-control me-1" placeholder="Chain 3 (Protein)"> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Chain ID(s) in DNA component:</label>
+                    <div class="d-flex" id="dnaChains">
+                        <input type="text" class="form-control me-1" placeholder="Chains (DNA)">
+                        <!-- <input type="text" class="form-control me-1" placeholder="Chain 2 (DNA)">
+                        <input type="text" class="form-control me-1" placeholder="Chain 3 (DNA)">
+                        <input type="text" class="form-control me-1" placeholder="Chain 4 (DNA)">
+                        <input type="text" class="form-control me-1" placeholder="Chain 5 (DNA)">
+                        <input type="text" class="form-control" placeholder="Chain 6 (DNA)"> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="thresholdDistance" class="form-label">Specify Threshold distance:</label>
+                <input type="number" class="form-control" id="thresholdDistance" placeholder="20.0" value="20">
+            </div>
+
+            <div class="mb-3">
+                <label for="msaSource" class="form-label">Specify Multiple Sequence Alignment (MSA) source:</label>
+                <select class="form-select" id="msaSource" name="msa-source">
+                    <option selected>HSSP database</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="sequenceIdentity" class="form-label">Specify Sequence identity cutoff:</label>
+                <input name="sequenceIdentity" type="number" class="form-control" id="sequenceIdentity" placeholder="30" value="30">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">OPTION 2: If User supplied MSA is chosen, provide MSA(s) for each protein chain selected:</label>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="msaChain1" class="form-label">Chain 1</label>
+                        <textarea class="form-control" id="msaChain1" rows="3" placeholder="Paste MSA (FASTA)"></textarea>
+                        <input type="file" class="form-control mt-2" id="msaFile1" onchange="validateFileFASTA(this)">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="msaChain2" class="form-label">Chain 2</label>
+                        <textarea class="form-control" id="msaChain2" rows="3" placeholder="Paste MSA (FASTA)"></textarea>
+                        <input type="file" class="form-control mt-2" id="msaFile2" onchange="validateFileFASTA(this)">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="msaChain3" class="form-label">Chain 3</label>
+                        <textarea class="form-control" id="msaChain3" rows="3" placeholder="Paste MSA (FASTA)"></textarea>
+                        <input type="file" class="form-control mt-2" id="msaFile3" onchange="validateFileFASTA(this)">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
+    <script src="assets/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

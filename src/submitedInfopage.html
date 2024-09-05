@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProDFace UI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/index.css" rel="stylesheet">
+
+    <link href="assets/css/submitInfopage.css" rel="stylesheet">
+
+    <!-- <script>
+        function validateFile(input) {
+            const filePath = input.value;
+            const allowedExtension = /\.(pdb|cif)$/i;
+            if (!allowedExtension.exec(filePath)) {
+                alert('Please upload a .pdb or .cif file.');
+                input.value = ''; // Clear the input
+                return false;
+            }
+            return true;
+        }
+
+        function validateFileFASTA(input) {
+            const filePath = input.value;
+            const allowedExtension = /\.(fasta)$/i;
+            if (!allowedExtension.exec(filePath)) {
+                alert('Please upload a .fasta file.');
+                input.value = ''; // Clear the input
+                return false;
+            }
+            return true;
+        }
+
+        function parseFile(input) {
+            if (validateFile(input)) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const content = event.target.result;
+                    const chains = extractChains(content);
+                    fillChainIDs(chains);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function extractChains(content) {
+            const chainIDs = new Set();
+            const lines = content.split('\n');
+            lines.forEach(line => {
+                if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
+                    const chainID = line.substring(21, 22).trim();
+                    if (chainID) {
+                        chainIDs.add(chainID);
+                    }
+                }
+            });
+            return Array.from(chainIDs);
+        }
+
+        function fillChainIDs(chains) {
+            const proteinChainInputs = document.querySelectorAll('#proteinChains input');
+            const dnaChainInputs = document.querySelectorAll('#dnaChains input');
+
+            // Clear previous values
+            proteinChainInputs.forEach(input => input.value = '');
+            dnaChainInputs.forEach(input => input.value = '');
+
+            chains.forEach((chain, index) => {
+                if (index < proteinChainInputs.length) {
+                    proteinChainInputs[index].value = chain;
+                } else if (index - proteinChainInputs.length < dnaChainInputs.length) {
+                    dnaChainInputs[index - proteinChainInputs.length].value = chain;
+                }
+            });
+        }
+    </script> -->
+</head>
+
+<body class="bg-dark text-white" style="background-image: url('assets/img/new-protein-dna.jpg');">
+    <div>
+        <div class="container">
+            <div class="box">
+<div class="header">
+
+    <h2>Your Submitted Data Information</h2>
+</div>
+                <!-- <div class="row"> -->
+                    <div class="col-12 inner-box">
+                        <div class="detail-container" id="detailContainer" >
+                        </div>
+                    <!-- </div> -->
+                    <!-- <div class="col-4">
+                        <img src="/src/assets/img/protienImage-2.jpg" class="img-fluid rounded-circle" alt="Protein Image">
+                    </div> -->
+                </div>
+                <div class="container-bottom-div">
+                            <a href="your-target-url.html">
+                                <h4  style="color: #e94747; margin-top: 10px;">Get Result</h4>
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/submitedInfopage.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
