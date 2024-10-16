@@ -128,7 +128,7 @@ function fillChainIDs(chains) {
         newInput.className = 'form-control me-1';
         newInput.placeholder = `Chain ${index + 1} (Nucleotide)`;
         newInput.value = chain;
-        newInput.name = `nucleotideChain${index + 1}`; // Set name attribute dynamically
+        newInput.name = `Nucleotide Chain ${index + 1}`; // Set name attribute dynamically
         nucleotideContainer.appendChild(newInput);
     });
 
@@ -139,7 +139,7 @@ function fillChainIDs(chains) {
         newInput.className = 'form-control me-1';
         newInput.placeholder = `Chain ${index + 1} (Protein)`;
         newInput.value = chain;
-        newInput.name = `proteinChain${index + 1}`; // Set name attribute dynamically
+        newInput.name = `Protein Chain ${index + 1}`; // Set name attribute dynamically
         proteinContainer.appendChild(newInput);
     });
 }

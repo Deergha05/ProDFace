@@ -35,7 +35,42 @@ function populateDetails(data) {
         // Append the row to the container
         container.appendChild(rowDiv);
     }
+      // Example usage:
+  const entryId = '1tup'; // Replace with your entry ID
+  const assemblyId = '1'; // Replace with your assembly ID
+    fetchAssemblyData(entryId, assemblyId);
 }
 
 // Call the function to populate the details
 populateDetails(data);
+
+
+
+
+async function fetchAssemblyData(entryId, assemblyId) {
+    const url = `https://data.rcsb.org/rest/v1/core/assembly/${entryId}/${assemblyId}`;
+  
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Assembly Data:', data);
+      return data;
+    }
+  catch (error) {
+      console.error('Failed to fetch assembly data:', error);
+    }
+  }
+  
+
+  
+ 
