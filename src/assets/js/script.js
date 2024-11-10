@@ -1,3 +1,24 @@
+// Debounce utility function
+function debounce(func, delay = 1000) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+// Function to handle input with debounce
+const handleInput = debounce(function () {
+    console.log('hello', this.value);
+    const pdbUrl = `https://files.rcsb.org/download/${this?.value}.pdb`;
+    //const mmCIFUrl = 'https://files.rcsb.org/download/4hhb.cif';
+    downloadAndProcessFile(pdbUrl);
+}, 700);
+
+// Attach event listener with debounced function
+document.getElementById('option1').addEventListener('input', handleInput);
+
+
 
 document.getElementById('option2').addEventListener('change', function() {
     parseFile(this);
@@ -31,7 +52,7 @@ function parseFile(input) {
         const pdbExtension = /\.(pdb)$/i;
         // const cifExtension = /\.(cif)$/i;
         const file = input.files[0];
-        console.log('===', file)
+        //console.log('===', file)
         const jsonData = JSON.stringify(file);
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -42,6 +63,153 @@ function parseFile(input) {
         reader.readAsText(file);
     }
 }
+
+
+// Function to download the file and process it using extractChains
+/* const fs = require('fs');
+const path = require('path');
+
+async function downloadAndProcessFile(url) {
+    try {
+        // Get the file type from the URL
+        const fileType = getFileTypeFromUrl(url);
+        
+        // Fetch the file
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch the file. Status: ${response.status}`);
+        }
+        
+        // Read the file content as text
+        const content = await response.text();
+        
+        // Process the content (replace with actual logic)
+        const chains = extractChains(content, fileType);
+        fillChainIDs(chains);
+        console.log('Extracted chains:', chains);
+
+        // Ensure the 'src' folder exists
+        const srcFolderPath = path.join(__dirname, 'src');
+        if (!fs.existsSync(srcFolderPath)) {
+            fs.mkdirSync(srcFolderPath);
+        }
+
+        // Define the file path and name based on the extension
+        const fileName = `${path.basename(url).split('.')[0]}_${fileType}.${fileType}`;
+        const filePath = path.join(srcFolderPath, fileName);
+
+        // Write the file to the project folder
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log(`File saved at: ${filePath}`);
+
+    } catch (error) {
+        console.error('Error downloading or processing the file:', error);
+    }
+}
+
+// Function to determine file type from the URL extension
+function getFileTypeFromUrl(url) {
+    const extension = url.split('.').pop().toLowerCase(); // Get the file extension
+    if (extension === 'pdb') {
+        return 'pdb';
+    } else if (extension === 'cif') {
+        return 'cif';
+    } else {
+        throw new Error('Unknown file type');
+    }
+} */
+
+
+
+
+
+
+async function downloadAndProcessFile(url) {
+    try {
+        // Get the file type from the URL
+        const fileType = getFileTypeFromUrl(url);
+        
+        // Fetch the file
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch the file. Status: ${response.status}`);
+        }
+        
+        // Read the file content as text
+        const content = await response.text();
+        
+        // Process the content using the extractChains function
+        const chains = extractChains(content, fileType);
+        fillChainIDs(chains);
+        
+        // Log or process the extracted data
+        console.log('Extracted chains:', chains);
+
+        // Download the file to the system
+        const blob = new Blob([content], { type: 'text/plain' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = url.split('/').pop(); // Sets the file name to the original file name from URL
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+        console.error('Error downloading or processing the file:', error);
+    }
+}
+
+// Function to determine file type from the URL extension
+function getFileTypeFromUrl(url) {
+    const extension = url.split('.').pop().toLowerCase(); // Get the file extension
+    if (extension === 'pdb') {
+        return 'pdb';
+    } else if (extension === 'cif') {
+        return 'cif';
+    } else {
+        throw new Error('Unknown file type');
+    }
+}
+
+
+/* async function downloadAndProcessFile(url) {
+    try {
+    // Get the file type from the URL
+    const fileType = getFileTypeFromUrl(url);
+   
+    // Fetch the file
+    const response = await fetch(url);
+    //console.log('file ', response, url)
+    if (!response.ok) {
+    throw new Error(`Failed to fetch the file. Status: ${response.status}`);
+    }
+   
+    // Read the file content as text
+    const content = await response.text();
+   
+    // Process the content using the extractChains function
+    const chains = extractChains(content, fileType);
+    fillChainIDs(chains);
+   
+    // Do something with the extracted data (you can log it or process it further)
+    console.log('abcd', chains);
+    } catch (error) {
+    console.error('Error downloading or processing the file:', error);
+    }
+   }
+   
+   // Function to determine file type from the URL extension
+   function getFileTypeFromUrl(url) {
+    const extension = url.split('.').pop().toLowerCase(); // Get the file extension
+    if (extension === 'pdb') {
+    return 'pdb';
+    } else if (extension === 'cif') {
+    return 'cif';
+    } else {
+    throw new Error('Unknown file type');
+    }
+   } */
+
 
 
 function extractChains(content, fileType) {
